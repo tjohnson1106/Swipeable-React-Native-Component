@@ -1,0 +1,1 @@
+# Swipeable-React-Native-Component
