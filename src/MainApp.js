@@ -27,6 +27,21 @@ class MainApp extends Component {
     this.state = {
       currentIndex: 0
     };
+
+    this.rotate = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: ["-10deg", "0deg", "-10deg"],
+      extrapolate: "clamp"
+    });
+
+    this.rotateAndTranslate = {
+      transform: [
+        {
+          rotate: this.rotate
+        },
+        ...this.position.getTranslateTransform()
+      ]
+    };
   }
 
   componentWillMount() {
@@ -52,7 +67,7 @@ class MainApp extends Component {
             {...this.PanResponder.panHandlers}
             key={item.id}
             style={[
-              { transform: this.position.getTranslateTransform() },
+              this.rotateAndTranslate,
               {
                 height: SCREEN_HEIGHT - 120,
                 width: SCREEN_WIDTH,
@@ -61,6 +76,52 @@ class MainApp extends Component {
               }
             ]}
           >
+            <Animated.View
+              style={{
+                position: "absolute",
+                top: 50,
+                left: 40,
+                zIndex: 1000
+              }}
+            >
+              <Text
+                style={{
+                  transform: [{ rotate: "-30deg" }],
+                  borderWidth: 1,
+                  color: "#e74c3c",
+                  borderColor: "#e74c3c",
+                  fontSize: 32,
+                  fontWeight: "800",
+                  padding: 10
+                }}
+              >
+                PASS
+              </Text>
+            </Animated.View>
+
+            <Animated.View
+              style={{
+                position: "absolute",
+                top: 50,
+                right: 40,
+                zIndex: 1000
+              }}
+            >
+              <Text
+                style={{
+                  transform: [{ rotate: "30deg" }],
+                  borderWidth: 1,
+                  color: "#3498db",
+                  borderColor: "#3498db",
+                  fontSize: 32,
+                  fontWeight: "800",
+                  padding: 10
+                }}
+              >
+                LIKE
+              </Text>
+            </Animated.View>
+
             <Image
               style={{
                 flex: 1,
