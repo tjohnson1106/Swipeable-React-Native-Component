@@ -54,6 +54,18 @@ class MainApp extends Component {
       outputRange: [1, 0, 0],
       extrapolate: "clamp"
     });
+
+    this.nextCardOpacity = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0, 1],
+      extrapolate: "clamp"
+    });
+
+    this.nextCardScale = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0.8, 1],
+      extrapolate: "clamp"
+    });
   }
 
   componentWillMount() {
@@ -65,7 +77,36 @@ class MainApp extends Component {
           y: gestureState.dy
         });
       },
-      onPanResponderRelease: (evt, gestureState) => {}
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dx > 120) {
+          Animated.spring(this.position, {
+            toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy }
+          }).start(() => {
+            this.setState(
+              { currentIndex: this.state.currentIndex + 1 },
+              () => {
+                this.position.setValue({ x: 0, y: 0 });
+              }
+            );
+          });
+        } else if (gestureState.dx > -120) {
+          Animated.spring(this.position, {
+            toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy }
+          }).start(() => {
+            this.setState(
+              { currentIndex: this.state.currentIndex + 1 },
+              () => {
+                this.position.setValue({ x: 0, y: 0 });
+              }
+            );
+          });
+        } else {
+          Animated.spring(this.position, {
+            toValue: { x: 0, y: 0 },
+            friction: 4
+          }).start();
+        }
+      }
     });
   }
 
@@ -152,6 +193,8 @@ class MainApp extends Component {
           key={item.id}
           style={[
             {
+              opacity: this.nextCardOpacity,
+              transform: [{ scale: this.nextCardScale }],
               height: SCREEN_HEIGHT - 120,
               width: SCREEN_WIDTH,
               padding: 10,
