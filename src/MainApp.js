@@ -42,6 +42,18 @@ class MainApp extends Component {
         ...this.position.getTranslateTransform()
       ]
     };
+
+    this.dislikeOpacity = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [0, 0, 1],
+      extrapolate: "clamp"
+    });
+
+    this.dislikeOpacity = this.position.x.interpolate({
+      inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+      outputRange: [1, 0, 0],
+      extrapolate: "clamp"
+    });
   }
 
   componentWillMount() {
@@ -86,6 +98,7 @@ class MainApp extends Component {
             >
               <Text
                 style={{
+                  opacity: this.dislikeOpacity,
                   transform: [{ rotate: "-30deg" }],
                   borderWidth: 1,
                   color: "#e74c3c",
@@ -107,8 +120,9 @@ class MainApp extends Component {
                 zIndex: 1000
               }}
             >
-              <Text
+              <Text>
                 style={{
+                  opacity: this.likeOpacity,
                   transform: [{ rotate: "30deg" }],
                   borderWidth: 1,
                   color: "#3498db",
@@ -117,8 +131,7 @@ class MainApp extends Component {
                   fontWeight: "800",
                   padding: 10
                 }}
-              >
-                LIKE
+                > LIKE
               </Text>
             </Animated.View>
 
